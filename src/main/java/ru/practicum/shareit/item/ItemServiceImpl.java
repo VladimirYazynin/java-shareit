@@ -40,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(Long userId, Long itemId, ItemUpdateDto updateItem) {
         Item existingItem = itemRepository.find(itemId)
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + itemId));
-        if (existingItem.getOwner().equals(userId)) {
+        if (!existingItem.getOwner().equals(userId)) {
             throw new ForbiddenException("У вас нет прав для изменения этой вещи");
         }
         if (updateItem.getName() != null) {
