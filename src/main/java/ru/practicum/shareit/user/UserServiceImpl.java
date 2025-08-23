@@ -37,30 +37,29 @@ public class UserServiceImpl implements UserService {
         if (isEmailRegistered(newUser.getEmail())) {
             throw new DuplicateException("Этот email уже занят");
         }
-        userRepository.create(user);
-        return UserMapper.mapToUserDto(user);
+        return UserMapper.mapToUserDto(userRepository.create(user));
     }
 
     @Override
     public UserDto update(Long userId, UserUpdateDto updateUser) {
-        User oldUser = userRepository.find(userId)
+        User existingUser = userRepository.find(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден с id: " + userId));
         updateUser.setId(userId);
-        User modifiedUser = UserMapper.mapToUser(updateUser);
-        if (modifiedUser.getEmail() != null) {
-            if (!oldUser.getEmail().equals(modifiedUser.getEmail())) {
-                if (isEmailRegistered(modifiedUser.getEmail())) {
+//        User modifiedUser = UserMapper.mapToUser(updateUser);
+        if (updateUser.getEmail() != null) {
+            if (!existingUser.getEmail().equals(updateUser.getEmail())) {
+                if (isEmailRegistered(updateUser.getEmail())) {
                     throw new DuplicateException("Этот email уже занят");
                 }
-                oldUser.setEmail(modifiedUser.getEmail());
+                existingUser.setEmail(updateUser.getEmail());
             }
         }
-        if (modifiedUser.getName() != null) {
-            oldUser.setName(modifiedUser.getName());
+        if (updateUser.getName() != null) {
+            existingUser.setName(updateUser.getName());
         }
 
-        userRepository.update(oldUser);
-        return UserMapper.mapToUserDto(oldUser);
+        userRepository.update(existingUser);
+        return UserMapper.mapToUserDto(existingUser);
     }
 
     @Override
