@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ErrorHandler {
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbidden(final ForbiddenException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDuplicate(final DuplicateException e) {
         return new ErrorResponse(e.getMessage());
