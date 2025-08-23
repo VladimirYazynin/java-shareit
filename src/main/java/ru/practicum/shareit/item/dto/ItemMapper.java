@@ -1,0 +1,37 @@
+package ru.practicum.shareit.item.dto;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import ru.practicum.shareit.item.Item;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class ItemMapper {
+
+    public static Item mapToItem(ItemCreateDto newItem) {
+        return Item.builder()
+                .name(newItem.getName())
+                .description(newItem.getDescription())
+                .available(newItem.getAvailable())
+                .owner(newItem.getOwner())
+                .build();
+    }
+
+    public static Item mapToItem(ItemUpdateDto updateItem) {
+        return Item.builder()
+                .name(updateItem.getName())
+                .description(updateItem.getDescription())
+                .available(updateItem.getAvailable())
+                .build();
+    }
+
+    public static ItemDto mapToItemDto(Item item) {
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .owner(item.getOwner())
+                .build();
+    }
+
+}
