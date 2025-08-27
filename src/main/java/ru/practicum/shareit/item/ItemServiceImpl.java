@@ -8,6 +8,7 @@ import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
 import java.util.Collection;
@@ -22,23 +23,23 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto findById(Long itemId) {
-        Item item = itemRepository.find(itemId)
+        Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + itemId));
         return ItemMapper.mapToItemDto(item);
     }
 
     @Override
     public ItemDto createItem(Long userId, ItemCreateDto newItem) {
-        userRepository.find(userId)
+        User owner = userRepository.findById(userId)
                         .orElseThrow(() -> new NotFoundException("Не найден пользователь с id: " + userId));
-        newItem.setOwner(userId);
         Item item = ItemMapper.mapToItem(newItem);
-        return ItemMapper.mapToItemDto(itemRepository.create(item));
+        item.setOwner(owner);
+        return ItemMapper.mapToItemDto(itemRepository.save(item));
     }
 
     @Override
     public ItemDto updateItem(Long userId, Long itemId, ItemUpdateDto updateItem) {
-        Item existingItem = itemRepository.find(itemId)
+        Item existingItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + itemId));
         if (!existingItem.getOwner().equals(userId)) {
             throw new ForbiddenException("У вас нет прав для изменения этой вещи");
@@ -52,12 +53,12 @@ public class ItemServiceImpl implements ItemService {
         if (updateItem.getAvailable() != null) {
             existingItem.setAvailable(updateItem.getAvailable());
         }
-        return ItemMapper.mapToItemDto(itemRepository.update(existingItem));
+        return ItemMapper.mapToItemDto(itemRepository.save(existingItem));
     }
 
     @Override
     public Collection<ItemDto> findUserItems(Long userId) {
-        return itemRepository.findUserItems(userId).stream()
+        return itemRepository.findByOwnerId(userId).stream()
                 .map(ItemMapper::mapToItemDto)
                 .toList();
     }
@@ -67,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isEmpty()) {
             return List.of();
         }
-        return itemRepository.findItemsByText(text).stream()
+        return itemRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(text, text).stream()
                 .map(ItemMapper::mapToItemDto)
                 .toList();
     }
