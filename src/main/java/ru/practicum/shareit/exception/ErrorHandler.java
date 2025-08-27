@@ -18,6 +18,12 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus
+    public ErrorResponse handleItemNotAvailable(final ItemNotAvailableException e) {
+        return new ErrorResponse(e.getMessage());
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDuplicate(final DuplicateException e) {
         return new ErrorResponse(e.getMessage());

@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -51,7 +52,7 @@ public class Booking {
     @JoinColumn(name = "booker_id", nullable = false)
     private User booker;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
 }

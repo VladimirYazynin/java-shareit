@@ -41,7 +41,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(Long userId, Long itemId, ItemUpdateDto updateItem) {
         Item existingItem = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Не найдена вещь с id: " + itemId));
-        if (!existingItem.getOwner().equals(userId)) {
+        if (!existingItem.getOwner().getId().equals(userId)) {
             throw new ForbiddenException("У вас нет прав для изменения этой вещи");
         }
         if (updateItem.getName() != null) {
@@ -68,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isEmpty()) {
             return List.of();
         }
-        return itemRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(text, text).stream()
+        return itemRepository.searchAvailableItemsByText(text).stream()
                 .map(ItemMapper::mapToItemDto)
                 .toList();
     }

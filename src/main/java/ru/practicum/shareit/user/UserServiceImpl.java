@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<UserDto> findAll() {
-        return userRepository.getAll().stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::mapToUserDto)
                 .toList();
     }
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private boolean isEmailRegistered(String email) {
-        return userRepository.getAll().stream()
+        return userRepository.findAll().stream()
                 .anyMatch(user -> user.getEmail().equals(email));
     }
 }
