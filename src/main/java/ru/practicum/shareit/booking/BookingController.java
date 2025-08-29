@@ -46,9 +46,9 @@ public class BookingController {
     public BookingDto updateBookingStatus(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                     @PathVariable Long bookingId,
                                     @RequestParam(name = "approved", required = true) Boolean approved) {
-        log.info("");
+        log.info("Получен запрос на обновление статуса брони с id: {}, пользователем с id: {}", bookingId, ownerId);
         BookingDto bookingDto = bookingService.updateBookingStatus(ownerId, bookingId, approved);
-        log.info("");
+        log.info("Статус брони успешно обновлён: {}", bookingDto);
         return bookingDto;
     }
 

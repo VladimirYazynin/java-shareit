@@ -24,7 +24,7 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleItemNotAvailable(final ItemNotAvailableException e) {
         return new ErrorResponse(e.getMessage());
     }

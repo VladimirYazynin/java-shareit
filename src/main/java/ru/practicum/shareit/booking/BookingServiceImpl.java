@@ -80,9 +80,9 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getUserBookings(Long userId, BookingState state) {
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findAllByBookerId(userId);
-            case CURRENT -> bookingRepository.findAllByBookerCurrentBookings(userId);
-            case PAST -> bookingRepository.findAllByBookerPastBookings(userId);
-            case FUTURE -> bookingRepository.findAllByBookerFutureBookings(userId);
+            case CURRENT -> bookingRepository.findAllByBookerCurrentBookings(userId, BookingStatus.APPROVED);
+            case PAST -> bookingRepository.findAllByBookerPastBookings(userId, BookingStatus.APPROVED);
+            case FUTURE -> bookingRepository.findAllByBookerFutureBookings(userId, BookingStatus.APPROVED);
             case WAITING -> bookingRepository.findAllByBookerIdAndStatus(userId, BookingStatus.WAITING);
             case REJECTED -> bookingRepository.findAllByBookerIdAndStatus(userId, BookingStatus.REJECTED);
             default -> throw new ValidationException("Некорректный параметр статуса");
@@ -100,9 +100,9 @@ public class BookingServiceImpl implements BookingService {
 
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findAllByItemOwnerId(ownerId);
-            case CURRENT -> bookingRepository.findAllByItemOwnerCurrentBookings(ownerId);
-            case PAST -> bookingRepository.findAllByItemOwnerPastBookings(ownerId);
-            case FUTURE -> bookingRepository.findAllByItemOwnerFutureBookings(ownerId);
+            case CURRENT -> bookingRepository.findAllByItemOwnerCurrentBookings(ownerId, BookingStatus.APPROVED);
+            case PAST -> bookingRepository.findAllByItemOwnerPastBookings(ownerId, BookingStatus.APPROVED);
+            case FUTURE -> bookingRepository.findAllByItemOwnerFutureBookings(ownerId, BookingStatus.APPROVED);
             case WAITING -> bookingRepository.findAllByItemOwnerIdAndStatus(ownerId, BookingStatus.WAITING);
             case REJECTED -> bookingRepository.findAllByItemOwnerIdAndStatus(ownerId, BookingStatus.REJECTED);
             default -> throw new ValidationException("Некорректный параметр статуса");

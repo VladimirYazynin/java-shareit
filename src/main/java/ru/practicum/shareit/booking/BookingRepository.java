@@ -17,18 +17,18 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.booker.id = :bookerId AND b.start < CURRENT_TIMESTAMP AND b.end > CURRENT_TIMESTAMP " +
-            "AND b.status = 'APPROVED'")
-    List<Booking> findAllByBookerCurrentBookings(Long bookerId);
+            "AND b.status = :status")
+    List<Booking> findAllByBookerCurrentBookings(Long bookerId, BookingStatus status);
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.booker.id = :bookerId AND b.start > CURRENT_TIMESTAMP " +
-            "AND b.status = 'APPROVED'")
-    List<Booking> findAllByBookerFutureBookings(Long bookerId);
+            "AND b.status = :status")
+    List<Booking> findAllByBookerFutureBookings(Long bookerId, BookingStatus status);
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.booker.id = :bookerId AND b.end < CURRENT_TIMESTAMP " +
-            "AND b.status = 'APPROVED'")
-    List<Booking> findAllByBookerPastBookings(Long bookerId);
+            "AND b.status = :status")
+    List<Booking> findAllByBookerPastBookings(Long bookerId, BookingStatus status);
 
     List<Booking> findAllByItemOwnerId(Long ownerId);
 
@@ -36,8 +36,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.item.owner.id = :ownerId AND b.start < CURRENT_TIMESTAMP AND b.end > CURRENT_TIMESTAMP " +
-            "AND b.status = 'APPROVED'")
-    List<Booking> findAllByItemOwnerCurrentBookings(Long ownerId);
+            "AND b.status = :status")
+    List<Booking> findAllByItemOwnerCurrentBookings(Long ownerId, BookingStatus status);
 
     Optional<Booking> findFirstByItemIdAndEndBeforeAndStatusOrderByEndDesc(
             Long itemId,
@@ -47,13 +47,13 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.item.owner.id = :ownerId AND b.start > CURRENT_TIMESTAMP " +
-            "AND b.status = 'APPROVED'")
-    List<Booking> findAllByItemOwnerFutureBookings(Long ownerId);
+            "AND b.status = :status")
+    List<Booking> findAllByItemOwnerFutureBookings(Long ownerId, BookingStatus status);
 
     @Query("SELECT b FROM Booking b " +
             "WHERE b.item.owner.id = :ownerId AND b.end < CURRENT_TIMESTAMP " +
-            "AND b.status = 'APPROVED'")
-    List<Booking> findAllByItemOwnerPastBookings(Long ownerId);
+            "AND b.status = :status")
+    List<Booking> findAllByItemOwnerPastBookings(Long ownerId, BookingStatus status);
 
     Optional<Booking> findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(
             Long itemId,
