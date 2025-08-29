@@ -33,4 +33,14 @@ public class ItemMapper {
                 .build();
     }
 
+    public static ItemExtendedDto mapToItemExtendedDto(Item item) {
+        return ItemExtendedDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .owner(item.getOwner().getId())
+                .build();
+    }
+
 }
