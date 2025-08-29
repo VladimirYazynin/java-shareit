@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.user.User;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Setter
@@ -37,5 +39,7 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+
+    private LocalDateTime created = LocalDateTime.now();
 
 }

@@ -67,4 +67,10 @@ public class ItemController {
         return itemService.findItemsByText(text);
     }
 
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addComment() {
+
+    }
+
 }

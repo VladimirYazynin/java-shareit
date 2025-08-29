@@ -44,8 +44,6 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingDto updateBookingStatus(Long ownerId, Long bookingId, Boolean approved) {
-//        User owner = userRepository.findById(ownerId)
-//                .orElseThrow(() -> new NotFoundException("Не найден пользователь с id: " + ownerId));
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Не найдена бронь с id: " + bookingId));
         Item item = booking.getItem();
@@ -97,13 +95,16 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public Collection<BookingDto> getOwnerItemsBookings(Long ownerId, BookingState state) {
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new NotFoundException("Не найден пользователь с id: " + ownerId));
+
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findAllByItemOwnerId(ownerId);
-//            case CURRENT -> bookingRepository.findAllByBookerCurrentBookings(userId);
-//            case PAST -> bookingRepository.findAllByBookerPastBookings(userId);
-//            case FUTURE -> bookingRepository.findAllByBookerFutureBookings(userId);
-//            case WAITING -> bookingRepository.findAllByBookerIdAndStatus(userId, BookingStatus.WAITING);
-//            case REJECTED -> bookingRepository.findAllByBookerIdAndStatus(userId, BookingStatus.REJECTED);
+            case CURRENT -> bookingRepository.findAllByItemOwnerCurrentBookings(ownerId);
+            case PAST -> bookingRepository.findAllByItemOwnerPastBookings(ownerId);
+            case FUTURE -> bookingRepository.findAllByItemOwnerFutureBookings(ownerId);
+            case WAITING -> bookingRepository.findAllByItemOwnerIdAndStatus(ownerId, BookingStatus.WAITING);
+            case REJECTED -> bookingRepository.findAllByItemOwnerIdAndStatus(ownerId, BookingStatus.REJECTED);
             default -> throw new ValidationException("Некорректный параметр статуса");
         };
 

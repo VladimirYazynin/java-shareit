@@ -57,14 +57,12 @@ public class BookingController {
         return bookingService.getBookingDetails(userId, bookingId);
     }
 
-    // Получение списка всех бронирований текущего пользователя
     @GetMapping
     public Collection<BookingDto> getUserBookings(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                   @RequestParam(name = "state", defaultValue = "ALL") BookingState state) {
         return bookingService.getUserBookings(userId, state);
     }
 
-    // Получение списка бронирований для всех вещей текущего пользователя.
     @GetMapping("/owner")
     public Collection<BookingDto> getOwnerItemsBookings(@RequestHeader("X-Sharer-User-Id") Long ownerId,
                                                         @RequestParam(name = "state", defaultValue = "ALL") BookingState state) {
