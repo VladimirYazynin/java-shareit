@@ -38,6 +38,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE b.item.owner.id = :ownerId AND b.start < CURRENT_TIMESTAMP AND b.end > CURRENT_TIMESTAMP " +
             "AND b.status = 'APPROVED'")
     List<Booking> findAllByItemOwnerCurrentBookings(Long ownerId);
+
     Optional<Booking> findFirstByItemIdAndEndBeforeAndStatusOrderByEndDesc(
             Long itemId,
             LocalDateTime endBefore,
