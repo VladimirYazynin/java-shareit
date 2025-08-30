@@ -19,14 +19,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<UserDto> findAll() {
-        return userRepository.getAll().stream()
+        return userRepository.findAll().stream()
                 .map(UserMapper::mapToUserDto)
                 .toList();
     }
 
     @Override
     public UserDto findById(Long userId) {
-        User user = userRepository.find(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден с id: " + userId));
         return UserMapper.mapToUserDto(user);
     }
@@ -37,15 +37,14 @@ public class UserServiceImpl implements UserService {
         if (isEmailRegistered(newUser.getEmail())) {
             throw new DuplicateException("Этот email уже занят");
         }
-        return UserMapper.mapToUserDto(userRepository.create(user));
+        return UserMapper.mapToUserDto(userRepository.save(user));
     }
 
     @Override
     public UserDto update(Long userId, UserUpdateDto updateUser) {
-        User existingUser = userRepository.find(userId)
+        User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден с id: " + userId));
         updateUser.setId(userId);
-//        User modifiedUser = UserMapper.mapToUser(updateUser);
         if (updateUser.getEmail() != null) {
             if (!existingUser.getEmail().equals(updateUser.getEmail())) {
                 if (isEmailRegistered(updateUser.getEmail())) {
@@ -58,17 +57,17 @@ public class UserServiceImpl implements UserService {
             existingUser.setName(updateUser.getName());
         }
 
-        userRepository.update(existingUser);
+        userRepository.save(existingUser);
         return UserMapper.mapToUserDto(existingUser);
     }
 
     @Override
     public void delete(Long id) {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
     }
 
     private boolean isEmailRegistered(String email) {
-        return userRepository.getAll().stream()
+        return userRepository.findAll().stream()
                 .anyMatch(user -> user.getEmail().equals(email));
     }
 }

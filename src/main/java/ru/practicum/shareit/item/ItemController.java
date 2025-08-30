@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.item.dto.CommentCreateDto;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemExtendedDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
 import java.util.Collection;
@@ -53,18 +56,26 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ItemDto findById(@PathVariable Long itemId) {
+    public ItemExtendedDto findById(@PathVariable Long itemId) {
         return itemService.findById(itemId);
     }
 
     @GetMapping
-    public Collection<ItemDto> findUserItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
+    public Collection<ItemExtendedDto> findUserItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
         return itemService.findUserItems(userId);
     }
 
     @GetMapping("/search")
     public Collection<ItemDto> findItemsByText(@RequestParam(name = "text", required = false) String text) {
         return itemService.findItemsByText(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                 @PathVariable Long itemId,
+                                 @RequestBody @Valid CommentCreateDto newComment) {
+        return itemService.addComment(userId, itemId, newComment);
     }
 
 }
