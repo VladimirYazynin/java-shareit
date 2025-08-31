@@ -46,4 +46,7 @@ public class Item {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
+    @Column(name = "request_id", nullable = true)
+    private Long requestId;
+
 }
