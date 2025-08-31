@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,5 +23,9 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "(LOWER(i.name) LIKE LOWER(CONCAT('%', :text, '%')) OR " +
             "LOWER(i.description) LIKE LOWER(CONCAT('%', :text, '%')))")
     Collection<Item> searchAvailableItemsByText(@Param("text") String text);
+
+    List<Item> findAllByRequestIdIn(Collection<Long> requestIds);
+
+    List<Item> findAllByRequestId(Long requestId);
 
 }
