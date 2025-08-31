@@ -1,8 +1,10 @@
 package ru.practicum.shareit.request;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import ru.practicum.shareit.request.dto.ItemRequestExtendedDto;
 import java.util.Collection;
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/requests")
@@ -28,7 +31,7 @@ public class ItemRequestController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemRequestDto addItemRequest(@RequestHeader("X-Sharer-User-Id") Long requestorId,
-                                         @RequestBody ItemRequestCreateDto newItemRequest) {
+                                         @Valid @RequestBody ItemRequestCreateDto newItemRequest) {
         log.info(
                 "Получен запрос на добавление \"запроса на вещь\", от пользователя с id: {}, и опсанием: {}",
                 requestorId, newItemRequest.getDescription()

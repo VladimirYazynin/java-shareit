@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import java.util.Collection;
  * TODO Sprint add-controllers.
  */
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/items")
@@ -36,7 +38,7 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDto create(@RequestHeader("X-Sharer-User-Id") Long userId, @RequestBody ItemCreateDto newItem) {
+    public ItemDto create(@RequestHeader("X-Sharer-User-Id") Long userId, @Valid @RequestBody ItemCreateDto newItem) {
         log.info("Получен запрос от пользователя с id: {}, на добавление вещи: {}", userId, newItem);
         ItemDto itemDto = itemService.createItem(userId, newItem);
         log.info("Добавлена вещь: {}", itemDto);
@@ -72,7 +74,7 @@ public class ItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                  @PathVariable Long itemId,
-                                 @RequestBody CommentCreateDto newComment) {
+                                 @RequestBody @Valid CommentCreateDto newComment) {
         return itemService.addComment(userId, itemId, newComment);
     }
 

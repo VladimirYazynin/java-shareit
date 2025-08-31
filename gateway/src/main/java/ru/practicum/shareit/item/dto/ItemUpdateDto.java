@@ -5,11 +5,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ItemCreateDto {
+public class ItemUpdateDto {
 
     private String name;
     private String description;
     private Boolean available;
-    private Long requestId;
 
 }

@@ -1,10 +1,8 @@
 package ru.practicum.shareit.booking;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +22,6 @@ import java.util.Collection;
  * TODO Sprint add-bookings.
  */
 @Slf4j
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/bookings")
@@ -35,7 +32,7 @@ public class BookingController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public BookingDto addBooking(@RequestHeader("X-Sharer-User-Id") Long bookerId,
-                                 @Valid @RequestBody BookingCreateDto newBooking) {
+                                 @RequestBody BookingCreateDto newBooking) {
         log.info("Получен запрос на создание брони: {}", newBooking);
         BookingDto bookingDto = bookingService.addBooking(bookerId, newBooking);
         log.info("Добавлена бронь: {}", bookingDto);
@@ -44,8 +41,8 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public BookingDto updateBookingStatus(@RequestHeader("X-Sharer-User-Id") Long ownerId,
-                                    @PathVariable Long bookingId,
-                                    @RequestParam(name = "approved", required = true) Boolean approved) {
+                                          @PathVariable Long bookingId,
+                                          @RequestParam(name = "approved", required = true) Boolean approved) {
         log.info("Получен запрос на обновление статуса брони с id: {}, пользователем с id: {}", bookingId, ownerId);
         BookingDto bookingDto = bookingService.updateBookingStatus(ownerId, bookingId, approved);
         log.info("Статус брони успешно обновлён: {}", bookingDto);

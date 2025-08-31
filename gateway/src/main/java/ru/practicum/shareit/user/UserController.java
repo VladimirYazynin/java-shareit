@@ -1,8 +1,10 @@
 package ru.practicum.shareit.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -23,6 +25,7 @@ import java.util.Collection;
  */
 
 @Slf4j
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/users")
@@ -32,7 +35,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@RequestBody UserCreateDto newUser) {
+    public UserDto create(@Valid @RequestBody UserCreateDto newUser) {
         log.info("Получен запрос на добавление пользователя: {}", newUser);
         UserDto user = userService.create(newUser);
         log.info("Добавлен пользователь: {}", user);
