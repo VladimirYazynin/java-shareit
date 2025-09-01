@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
-import ru.practicum.shareit.request.dto.ItemRequestDto;
-import ru.practicum.shareit.request.dto.ItemRequestExtendedDto;
-
-import java.util.Collection;
 
 @Slf4j
 @Validated
@@ -30,29 +27,27 @@ public class ItemRequestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemRequestDto addItemRequest(@RequestHeader("X-Sharer-User-Id") Long requestorId,
-                                         @Valid @RequestBody ItemRequestCreateDto newItemRequest) {
+    public ResponseEntity<Object> addItemRequest(@RequestHeader("X-Sharer-User-Id") Long requestorId,
+                                                 @Valid @RequestBody ItemRequestCreateDto newItemRequest) {
         log.info(
                 "Получен запрос на добавление \"запроса на вещь\", от пользователя с id: {}, и опсанием: {}",
                 requestorId, newItemRequest.getDescription()
         );
-        ItemRequestDto itemRequestDto = itemRequestClient.addItemRequest(requestorId, newItemRequest);
-        log.info("Успешно создан запрос: {}", itemRequestDto);
-        return itemRequestDto;
+        return itemRequestClient.addItemRequest(requestorId, newItemRequest);
     }
 
     @GetMapping
-    public Collection<ItemRequestExtendedDto> getUserItemRequests(@RequestHeader("X-Sharer-User-Id") Long requestorId) {
+    public ResponseEntity<Object> getUserItemRequests(@RequestHeader("X-Sharer-User-Id") Long requestorId) {
         return itemRequestClient.getUserItemRequests(requestorId);
     }
 
     @GetMapping("/all")
-    public Collection<ItemRequestDto> getItemRequests() {
+    public ResponseEntity<Object> getItemRequests() {
         return itemRequestClient.getItemRequests();
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestExtendedDto getItemRequest(@PathVariable(name = "requestId") Long requestId) {
+    public ResponseEntity<Object> getItemRequest(@PathVariable(name = "requestId") Long requestId) {
         return itemRequestClient.getItemRequest(requestId);
     }
 

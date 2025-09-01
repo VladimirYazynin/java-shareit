@@ -54,7 +54,7 @@ public class BookingController {
     public ResponseEntity<Object> getUserBookings(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                   @RequestParam(name = "state", defaultValue = "ALL") String state) {
         BookingState bookingState = BookingState.from(state)
-                .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + state));
+                .orElseThrow(() -> new IllegalArgumentException("Некорректное значение: " + state));
         return bookingClient.getUserBookings(userId, bookingState);
     }
 
