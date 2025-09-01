@@ -99,8 +99,9 @@ public class BaseClient {
         return prepareGatewayResponse(shareitServerResponse);
     }
 
-    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, @Nullable Map<String, Object> parameters, @Nullable T body) {
-        HttpEntity<T> requestEntity = new HttpEntity<>(body);
+    private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Map<String, Object> parameters, @Nullable T body) {
+
+        HttpEntity<T> requestEntity = (body != null) ? new HttpEntity<>(body) : (HttpEntity<T>) HttpEntity.EMPTY;
 
         ResponseEntity<Object> shareitServerResponse;
         try {
