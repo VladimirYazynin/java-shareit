@@ -20,10 +20,6 @@ import ru.practicum.shareit.user.dto.UserUpdateDto;
 
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
-
 @Slf4j
 @Validated
 @RestController
@@ -31,13 +27,13 @@ import java.util.Collection;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private final UserService userService;
+    private final UserClient userClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto create(@Valid @RequestBody UserCreateDto newUser) {
         log.info("Получен запрос на добавление пользователя: {}", newUser);
-        UserDto user = userService.create(newUser);
+        UserDto user = userClient.create(newUser);
         log.info("Добавлен пользователь: {}", user);
         return user;
     }
@@ -45,7 +41,7 @@ public class UserController {
     @PatchMapping("/{userId}")
     public UserDto update(@PathVariable Long userId, @RequestBody UserUpdateDto updateUser) {
         log.info("Получен запрос на обновление пользователя с id: {}", userId);
-        UserDto modifiedUser = userService.update(userId, updateUser);
+        UserDto modifiedUser = userClient.update(userId, updateUser);
         log.info("Обновлены данные пользователя с id: {}", userId);
         return modifiedUser;
     }
@@ -54,18 +50,18 @@ public class UserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId) {
         log.info("Получен запрос на удаление пользователя с id: {}", userId);
-        userService.delete(userId);
+        userClient.delete(userId);
         log.info("Пользователь с id: {} удалён", userId);
     }
 
     @GetMapping
     public Collection<UserDto> findAll() {
-        return userService.findAll();
+        return userClient.findAll();
     }
 
     @GetMapping("/{userId}")
     public UserDto findById(@PathVariable Long userId) {
-        return userService.findById(userId);
+        return userClient.findById(userId);
     }
 
 }

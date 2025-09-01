@@ -26,7 +26,7 @@ import java.util.Collection;
 @RequestMapping(path = "/requests")
 public class ItemRequestController {
 
-    private final ItemRequestService itemRequestService;
+    private final ItemRequestClient itemRequestClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,24 +36,24 @@ public class ItemRequestController {
                 "Получен запрос на добавление \"запроса на вещь\", от пользователя с id: {}, и опсанием: {}",
                 requestorId, newItemRequest.getDescription()
         );
-        ItemRequestDto itemRequestDto = itemRequestService.addItemRequest(requestorId, newItemRequest);
+        ItemRequestDto itemRequestDto = itemRequestClient.addItemRequest(requestorId, newItemRequest);
         log.info("Успешно создан запрос: {}", itemRequestDto);
         return itemRequestDto;
     }
 
     @GetMapping
     public Collection<ItemRequestExtendedDto> getUserItemRequests(@RequestHeader("X-Sharer-User-Id") Long requestorId) {
-        return itemRequestService.getUserItemRequests(requestorId);
+        return itemRequestClient.getUserItemRequests(requestorId);
     }
 
     @GetMapping("/all")
     public Collection<ItemRequestDto> getItemRequests() {
-        return itemRequestService.getItemRequests();
+        return itemRequestClient.getItemRequests();
     }
 
     @GetMapping("/{requestId}")
     public ItemRequestExtendedDto getItemRequest(@PathVariable(name = "requestId") Long requestId) {
-        return itemRequestService.getItemRequest(requestId);
+        return itemRequestClient.getItemRequest(requestId);
     }
 
 }

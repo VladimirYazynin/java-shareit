@@ -24,9 +24,6 @@ import ru.practicum.shareit.item.dto.ItemUpdateDto;
 
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Slf4j
 @Validated
 @RestController
@@ -34,13 +31,13 @@ import java.util.Collection;
 @RequestMapping("/items")
 public class ItemController {
 
-    private final ItemService itemService;
+    private final ItemClient itemClient;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") Long userId, @Valid @RequestBody ItemCreateDto newItem) {
         log.info("Получен запрос от пользователя с id: {}, на добавление вещи: {}", userId, newItem);
-        ItemDto itemDto = itemService.createItem(userId, newItem);
+        ItemDto itemDto = itemClient.createItem(userId, newItem);
         log.info("Добавлена вещь: {}", itemDto);
         return itemDto;
     }
@@ -50,24 +47,24 @@ public class ItemController {
                           @PathVariable Long itemId,
                           @RequestBody ItemUpdateDto updateItem) {
         log.info("Получен запрос от пользователя с id: {}, на обновление вещи с id: {}", userId, itemId);
-        ItemDto itemDto = itemService.updateItem(userId, itemId, updateItem);
+        ItemDto itemDto = itemClient.updateItem(userId, itemId, updateItem);
         log.info("Данные о вещи обновлены: {}", itemDto);
         return itemDto;
     }
 
     @GetMapping("/{itemId}")
     public ItemExtendedDto findById(@PathVariable Long itemId) {
-        return itemService.findById(itemId);
+        return itemClient.findById(itemId);
     }
 
     @GetMapping
     public Collection<ItemExtendedDto> findUserItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.findUserItems(userId);
+        return itemClient.findUserItems(userId);
     }
 
     @GetMapping("/search")
     public Collection<ItemDto> findItemsByText(@RequestParam(name = "text", required = false) String text) {
-        return itemService.findItemsByText(text);
+        return itemClient.findItemsByText(text);
     }
 
     @PostMapping("/{itemId}/comment")
@@ -75,7 +72,7 @@ public class ItemController {
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                  @PathVariable Long itemId,
                                  @RequestBody @Valid CommentCreateDto newComment) {
-        return itemService.addComment(userId, itemId, newComment);
+        return itemClient.addComment(userId, itemId, newComment);
     }
 
 }
