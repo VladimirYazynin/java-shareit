@@ -54,7 +54,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         List<Item> items = itemRepository.findAllByRequestIdIn(itemRequestIds);
 
         Map<Long, List<Item>> itemsByRequestId = items.stream()
-                .collect(Collectors.groupingBy(item -> item.getRequestId()));
+                .collect(Collectors.groupingBy(item -> item.getRequest().getId()));
 
         return userItemRequests.stream()
                 .map(itemRequest -> ItemRequestMapper.mapToItemRequestExtendedDto(

@@ -16,6 +16,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemExtendedDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserRepository;
 
@@ -32,6 +34,7 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Override
     public ItemExtendedDto findById(Long itemId) {
@@ -51,6 +54,13 @@ public class ItemServiceImpl implements ItemService {
                 .orElseThrow(() -> new NotFoundException("Не найден пользователь с id: " + userId));
         Item item = ItemMapper.mapToItem(newItem);
         item.setOwner(owner);
+        if (newItem.getRequestId() != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(newItem.getRequestId())
+                    .orElseThrow(() -> new NotFoundException(
+                            "Запрос на вещь не найден с таким id: " + newItem.getRequestId()
+                    ));
+            item.setRequest(itemRequest);
+        }
         return ItemMapper.mapToItemDto(itemRepository.save(item));
     }
 
